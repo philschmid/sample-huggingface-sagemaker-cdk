@@ -40,7 +40,8 @@ iam_sagemaker_actions = [
 def get_image_uri(
     region=None, transformmers_version=LATEST_TRANSFORMERS_VERSION, pytorch_version=LATEST_PYTORCH_VERSION
 ):
-    return f"{region_dict[region]}dkr.ecr.{region}.amazonaws.com/huggingface-pytorch-inference:{pytorch_version}-transformers{transformmers_version}-cpu-py36-ubuntu18.04"
+    # return f"{region_dict[region]}.dkr.ecr.{region}.amazonaws.com/huggingface-pytorch-inference:{pytorch_version}-transformers{transformmers_version}-cpu-py36-ubuntu18.04"
+    return "763104351884.dkr.ecr.us-east-1.amazonaws.com/huggingface-pytorch-inference:1.8.1-transformers4.10.2-gpu-py36-cu111-ubuntu18.04"
 
 
 class HuggingfaceSagemaker(cdk.Stack):
@@ -81,6 +82,7 @@ class HuggingfaceSagemaker(cdk.Stack):
             primary_container=container,
             model_name=f'model-{huggingface_model.replace("_","-").replace("/","--")}',
         )
+
         endpoint_configuration = sagemaker.CfnEndpointConfig(
             self,
             "hf_endpoint_config",
@@ -101,3 +103,5 @@ class HuggingfaceSagemaker(cdk.Stack):
             endpoint_name=f'endpoint-{huggingface_model.replace("_","-").replace("/","--")}',
             endpoint_config_name=endpoint_configuration.endpoint_config_name,
         )
+        endpoint_configuration.node.add_dependency(model)
+        endpoint.node.add_dependency(endpoint_configuration)
