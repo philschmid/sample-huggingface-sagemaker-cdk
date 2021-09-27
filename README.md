@@ -27,6 +27,10 @@ Deploy your Hugging Face Transformer model to Amazon SageMaker
 
 ```bash
 cdk deploy \
-  --parameters model=distilbert-base-uncased-finetuned-sst-2-english \
-  --parameters task=text-classification
+  --parameters model="distilbert-base-uncased-finetuned-sst-2-english" \
+  --parameters task="text-classification"
 ```
+
+## Extras
+
+To customize it you can adjust the `config.py` or fork it. There is also an additional Parameter. `instance_type` you can define when running `cdk deploy` if you want to host on a specifc machine. 
